@@ -3,9 +3,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --custom-light-text: #16a34a; /* Tailwind green-600 */
+  --custom-light-text: #16a34a;
   --custom-dark-text: #f97316;
-  /* Tailwind orange-500 */
+  --cgpa-light-text: #0761d7;
+  --cgpa-dark-text: #93e0ee;
+  --heading-bg-color : hsl(49, 57%, 52%);
+  --heading-color:#ed4444;
 }
 
 .text-custom {
@@ -17,5 +20,18 @@
 }
 
 .primary-boxes {
-  @apply bg-[#f9f9f9] dark:bg-gray-800 dark:border-gray-500 text-gray-700 dark:text-gray-300;
+  @apply bg-[#f9f9f9] dark:bg-gray-800 dark:border-gray-500  text-gray-700 dark:text-gray-300;
+}
+
+.semester-heading {
+  @apply text-[var(--heading-color)] dark:text-[var(--heading-bg-color)] font-[Nunito] text-xl font-bold drop-shadow-lg;
+}
+
+.table-header {
+  @apply drop-shadow-lg bg-[var(--heading-bg-color)] text-white  px-4 py-2 rounded-md;
+}
+
+.text-vibrant {
+ @apply relative  font-medium tracking-wide text-transparent transition-all duration-500
+  bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 drop-shadow-[0_2px_10px_rgba(56,189,248,0.6)] ;
 }

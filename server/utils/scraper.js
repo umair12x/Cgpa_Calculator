@@ -1,24 +1,24 @@
 require("dotenv").config();
-const { chromium } = require("playwright");
+const { firefox } = require("playwright");
 
 const scraper = async (regNo) => {
   let browser;
   try {
     // Launch the browser in headless mode
-    browser = await chromium.launch({ headless: true, args: ["--no-sandbox"] });
+    browser = await firefox.launch({ headless: true, args: ["--no-sandbox"] });
 
    const context = await browser.newContext({
       ignoreHTTPSErrors: true, // ✅ ignore SSL errors
+      
     });
-
 
     const page = await context.newPage();
 
     // Block unnecessary resources to speed up the scraping
-    await page.route(
-      "**/*.{png,jpg,jpeg,css,woff,woff2,eot,ttf,svg}",
-      (route) => route.abort()
-    );
+    // await page.route(
+    //   "**/*.{png,jpg,jpeg,css,woff,woff2,eot,ttf,svg}",
+    //   (route) => route.abort()
+    // );
 
     // Navigate to the login page and fill in the registration number
     await page.goto(`https://lms.uaf.edu.pk/login/index.php`, {
@@ -160,10 +160,11 @@ const scraper = async (regNo) => {
     return { registrationNo, studentName, ...result };
   } catch (error) {
     console.error("Scraping error:", error.message);
+    console.error("Internet Problem or University Website is down so please wait and try later", error.stack);
   } finally {
-    // Ensure the browser is closed after the operation
     if (browser) await browser.close();
   }
 };
 
 module.exports = scraper;
+// scraper("2022-ag-7755")

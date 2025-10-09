@@ -6,7 +6,7 @@ const MyFooter = () => {
   return (
     <footer className=" justify-between items-center p-0  shadow-md w-full my-footer flex flex-col  py-4">
       <div className="grid grid-cols-1 font-mono justify-evenly gap-4 my-4 md:grid-cols-3">
-        <h3 className="p-5 text-gray-800 text-center dark:text-gray-300   lg:text-1xl md:text-lg sm:text-md text-sm ">
+        <h3 className="p-5  text-center text-vibrant   lg:text-1xl md:text-lg sm:text-md text-sm ">
           Built By Muhammad Umair
           <div className="opacity-50">
             Student of UAF BS.CS Session: 22-26 ...

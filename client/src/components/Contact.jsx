@@ -10,14 +10,14 @@ const Contact = () => {
     <>
       <div className="container justify-evenly items-center my-20 md:my-16 flex flex-col font-Nunito">
         <div className="flex flex-col justify-center items-center py-2 md:py-5">
-          <h2 className="font-semibold text-custom text-4xl">Contact Me</h2>
+          <h2 className="font-semibold text-vibrant text-4xl">Contact Me</h2>
           <h5 className="font-light secondary-text ">Get in Touch</h5>
         </div>
         <hr className="opacity-35 border-gray-500 dark:border-gray-600 w-[50%] pb-4" />
 
         <div className="flex flex-col secondary-text md:flex-row justify-between gap-y-10 md:gap-x-10">
           <div className="flex flex-col justify-center  items-center py-2  gap-5 md:px-10">
-            <h4 className="text-xl font-semibold ">Talk to me</h4>
+            <h4 className="text-xl font-semibold text-vibrant ">Talk to me</h4>
             <div className="bg-[#f9f9f9] dark:bg-gray-800 dark:border-gray-500 flex flex-col rounded-md md:rounded-lg border py-5 px-10  w-[250px] items-center my-3 justify-center">
               <CiMail className="font-extrabold text-2xl" />
               <h5 className="font-medium">Email</h5>
@@ -30,7 +30,9 @@ const Contact = () => {
             </div>
           </div>
           <div className="flex flex-col justify-center items-center py-2  gap-5 md:px-10">
-            <h4 className="text-xl font-semibold">Write me your message</h4>
+            <h4 className="text-xl font-semibold text-vibrant">
+              Write me your message
+            </h4>
             <div className="flex flex-col justify-center items-center">
               <form className="flex flex-col gap-5" action="submit">
                 <div className="relative border-0 pt-[10px] ">

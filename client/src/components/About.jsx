@@ -49,7 +49,7 @@ const About = () => {
   return (
     <div className="flex flex-col justify-center items-center my-10 gap-8 px-4 md:px-8 lg:px-16">
       {/* Section Title */}
-      <h2 className="text-3xl font-bold text-center text-custom">
+      <h2 className="text-3xl font-bold text-center text-vibrant">
         Uniqueness and Features
       </h2>
       <hr className="opacity-35 border-gray-500 dark:border-gray-600 w-[50%] pb-1" />
@@ -75,12 +75,12 @@ const About = () => {
               className="relative px-6 py-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1"
             >
               {/* Icon */}
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-primary text-black dark:text-white rounded-full flex items-center justify-center shadow-lg">
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12  duration-500  hover:scale-[1px] text-black dark:text-white rounded-full flex items-center justify-center shadow-lg">
                 {React.cloneElement(item.icon, { size: 21 })}
               </div>
 
               {/* Title */}
-              <h2 className="font-semibold secondary-text text-xl mt-8 mb-2">{item.name}</h2>
+              <h2 className="font-semibold text-vibrant text-xl mt-8 mb-2">{item.name}</h2>
 
               {/* Divider */}
               <hr className="opacity-35 border-gray-500 dark:border-gray-600 w-full my-2" />

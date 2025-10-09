@@ -3,11 +3,12 @@ import { FaIdCardClip } from "react-icons/fa6";
 import Input from "./partials/Input";
 import MagicButton from "./partials/MagicButton";
 import { motion } from "framer-motion";
-import { ClipLoader } from "react-spinners";
+// import { ClipLoader } from "react-spinners";
+import Loader from "./partials/Loader";
 
 const StudentResultSearch = ({ setStudentResponse }) => {
   const [regNo, setregNo] = useState("");
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +48,7 @@ const StudentResultSearch = ({ setStudentResponse }) => {
       animate={{ y: 0 }}
       transition={{ type: "tween", duration: 0.25 }}
     >
-      <h2 className="text-center text-2xl font-semibold drop-shadow-lg text-custom mb-4">
+      <h2 className="text-center text-2xl font-semibold drop-shadow-lg text-vibrant mb-4">
         Student Result Search
       </h2>
       <hr className="border-gray-300 my-5 dark:border-gray-600" />
@@ -63,15 +64,20 @@ const StudentResultSearch = ({ setStudentResponse }) => {
         <div className="mb-4 gap-0.5 md:gap-2 flex items-center">
           {/* Disable input when loading */}
           <Input value={regNo} setregNo={setregNo} disabled={loading} />
-          
+
           <div className="min-h-[40px] min-w-[40px] max-h-[50px] cursor-pointer flex items-center justify-center">
             {loading ? (
-              <ClipLoader color="#3498db" size={30} /> // Loader when submitting
+              <>&nbsp;</>
             ) : (
               <MagicButton disabled={loading} text={"Calc..."} /> // Button when not loading
             )}
           </div>
         </div>
+        {loading && (
+          <div className="flex m-5 p-10 items-center justify-center">
+            <Loader />
+          </div>
+        )}
       </form>
     </motion.div>
   );

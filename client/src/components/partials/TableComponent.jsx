@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdOutlineGrade } from "react-icons/md";
+import GloyButton from "./GloyButtoon";
 
 const TableComponent = ({ studentRespone }) => {
   const [visibleTableIndex, setVisibleTableIndex] = useState(null);
@@ -28,19 +28,15 @@ const TableComponent = ({ studentRespone }) => {
             >
               {/* Semester Header */}
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-md sm:text-xl font-bold text-custom drop-shadow-md">
-                 {result.semester}
+                <h3 className="text-vibrant relative group cursor-pointer">
+                  {result.semester}
+                  <span className="absolute left-0 -bottom-1 h-[1px]  bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full transition-all duration-900 group-hover:w-full"></span>
                 </h3>
-                <button
+
+                <GloyButton
+                  result={`${result.Gpa}`}
                   onClick={() => toggleVisibleTableIndex(index)}
-                  className="relative inline-flex items-center justify-center px-4 py-2 border border-gray-700 dark:border-gray-400 rounded-full shadow-sm focus:outline-none  focus:ring-primary transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-500 dark:hover:border-gray-500 cursor-pointer"
-                >
-                  {/* Text */}
-                  <p className="flex items-center gap-1 text-md font-medium secondary-text">
-                    GPA:{" "}
-                    <span className="font-bold text-custom">{result.Gpa}</span>
-                  </p>
-                </button>
+                />
               </div>
 
               {/* Animated Table */}
@@ -56,7 +52,7 @@ const TableComponent = ({ studentRespone }) => {
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden text-xs sm:text-sm md:text-base">
                         {/* Table Header */}
-                        <thead className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                        <thead className="table-header">
                           <tr>
                             <th
                               scope="col"

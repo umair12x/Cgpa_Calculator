@@ -10,7 +10,7 @@ const StudentInformation = ({ studentRespone }) => {
       {studentRespone && (
         <div className="mb-8 max-w-lg mx-auto rounded-lg shadow-md p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-shadow duration-300 hover:shadow-lg">
           {/* Heading */}
-          <h2 className="text-center text-2xl font-bold text-custom mb-4">
+          <h2 className="text-center text-2xl font-bold text-vibrant mb-4">
             Student Information
           </h2>
           <hr className="border-gray-300 my-4 dark:border-gray-600 opacity-50" />

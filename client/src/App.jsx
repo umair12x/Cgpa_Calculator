@@ -6,7 +6,6 @@ import Output from "./components/Responser";
 import UseAccordian from "./components/UseAccordian";
 import { cn } from "./components/lib/utils";
 import Hero from "./components/Hero";
-import { BackgroundLines } from "./components/BackgroundLines";
 import "./App.css";
 import Contact from "./components/Contact";
 import About from "./components/About";
@@ -68,7 +67,6 @@ const App = () => {
         </script>
       </Helmet>
 
-      <BackgroundLines>
         <NavBar className="z-100" />
         <main className={cn("container z-30 mx-auto px-4")}>
           <Hero className={cn("z-50 ")} />
@@ -78,7 +76,6 @@ const App = () => {
           <UseAccordian />
         </main>
         <MyFooter  />
-      </BackgroundLines>
     </div>
   );
 };
