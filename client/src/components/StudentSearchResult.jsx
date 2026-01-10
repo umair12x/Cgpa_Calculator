@@ -35,7 +35,6 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
       });
 
       const data = await response.json();
-      // console.log("Response:", data);
       setStudentResponse(data);
       setAlertMessage({
         type: data.type,
@@ -43,8 +42,8 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
       });
     } catch (error) {
       setAlertMessage({
-        type: data.type,
-        message: data.message,
+        type: "error",
+        message: "An error occurred. Please try again.",
       });
       console.error("Error:", error);
     } finally {
@@ -59,7 +58,7 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
       animate={{ y: 0 }}
       transition={{ type: "tween", duration: 0.25 }}
     >
-      <h2 className="text-center text-2xl font-semibold drop-shadow-lg text-vibrant mb-4">
+      <h2 className="text-center text-2xl font-semibold drop-shadow-lg text-gray-800 dark:text-white mb-4">
         Student Result Search
       </h2>
       <hr className="border-gray-300 my-5 dark:border-gray-600" />
@@ -67,7 +66,7 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
       <form onSubmit={handleSubmit}>
         <label
           htmlFor="register"
-          className="flex secondary-text flex-col gap-1 font-medium mb-3"
+          className="flex flex-col gap-1 font-medium mb-3 text-gray-700 dark:text-gray-300"
         >
           <p className="flex items-center gap-1">
             <FaIdCardClip /> Register:
@@ -82,13 +81,10 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
               &nbsp;
             </div>
           ) : (
-            <Button
-              disabled={loading}
-              text={<FaCalculator className="icon" />}
-            />
+            <Button disabled={loading} text={<FaCalculator className="icon" />} />
           )}
         </div>
-        <div className="mt-1 text-[11px] text-center text-gray-500 dark:text-slate-400">
+        <div className="mt-1 text-[11px] text-center text-gray-500 dark:text-gray-400">
           Format: 4-digit year - ag - digit number
         </div>
         {loading && (
@@ -96,7 +92,6 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
             <Loader />
           </div>
         )}
-
       </form>
     </motion.div>
   );

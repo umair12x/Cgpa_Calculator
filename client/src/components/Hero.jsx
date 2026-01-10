@@ -9,7 +9,7 @@ const Hero = () => {
           <Logo />
         </div>
 
-        <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight Main-Heading-Style">
+        <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight">
           CGPA Calculator for
           <br />
           University of Agriculture,
@@ -17,7 +17,7 @@ const Hero = () => {
           Faisalabad
         </h2>
 
-        <p className="font-light text-sm sm:text-base md:text-lg  opacity-80 text-style">
+        <p className="font-light text-sm sm:text-base md:text-lg opacity-80">
           Get your best results
         </p>
       </div>

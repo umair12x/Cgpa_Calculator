@@ -51,14 +51,12 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can add form submission logic here if needed
     console.log("Form submitted:", formData);
   };
 
   return (
-    <section className="py-16 md:py-20 font-Nunito ">
+    <section className="py-16 md:py-20">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-        {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 mb-6">
             <FiMessageSquare className="text-2xl text-white" />
@@ -73,7 +71,6 @@ const Contact = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start">
-          {/* Contact Methods */}
           <div className="space-y-8">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700 transition-all hover:shadow-xl">
               <div className="flex items-center gap-4 mb-6">
@@ -130,7 +127,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Message Form */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">

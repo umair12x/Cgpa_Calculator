@@ -35,18 +35,18 @@ const TableComponent = ({ studentRespone }) => {
     return colors[grade] || "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800";
   };
 
-  // Get overall CGPA from backend response
+
   const getOverallCGPA = () => {
     return studentRespone?.Cgpa ? parseFloat(studentRespone.Cgpa) : 0;
   };
 
-  // Get highest GPA from all semesters
+
   const getHighestGPA = () => {
     if (!chartData.length) return 0;
     return Math.max(...chartData.map((d) => d.gpa));
   };
 
-  // Get lowest GPA from all semesters
+
   const getLowestGPA = () => {
     if (!chartData.length) return 0;
     return Math.min(...chartData.map((d) => d.gpa));
@@ -61,7 +61,7 @@ const TableComponent = ({ studentRespone }) => {
   return (
     <div className="w-full px-2 sm:px-3 md:px-4">
       {/* Chart Component */}
-      {chartData.length > 0 && <ChartComponent chartData={chartData} overallCGPA={getOverallCGPA()} studentName={studentRespone?.name} />}
+      {chartData.length > 0 && <ChartComponent chartData={chartData} getLowestGPA={getLowestGPA} overallCGPA={getOverallCGPA()} getHighestGPA={getHighestGPA}/>}
 
       {/* Tables Section - Mobile Optimized */}
       {studentRespone?.result?.length > 0 && (
