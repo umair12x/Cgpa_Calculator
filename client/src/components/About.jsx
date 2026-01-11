@@ -1,94 +1,315 @@
-import React from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaUser,
   FaGraduationCap,
   FaCalculator,
   FaChartBar,
   FaHeadset,
+  FaLightbulb,
+  FaRobot,
+  FaDatabase,
+  FaSyncAlt,
+  FaShieldAlt,
+  FaRocket,
+  FaUniversity,
+  FaChevronRight,
+  FaExternalLinkAlt,
+  FaStar,
+  FaCheckCircle,
+  FaMagic,
 } from "react-icons/fa";
-
-const aboutData = [
-  {
-    id: 1,
-    name: "Easy Input",
-    icon: <FaUser />,
-    description:
-      "Students just need to enter their registration number, and the system will automatically fetch their results.",
-  },
-  {
-    id: 2,
-    name: "Comprehensive Results",
-    icon: <FaGraduationCap />,
-    description:
-      "Get detailed results, including the student's name, CGPA, GPA for each semester, and improved grades for re-enrolled subjects (D or F grades).",
-  },
-  {
-    id: 3,
-    name: "Smart Calculations",
-    icon: <FaCalculator />,
-    description:
-      "Our system intelligently calculates CGPA by excluding non-credit hour subjects with 'P' grades and adjusts for re-enrolled subjects to replace previous grades.",
-  },
-  {
-    id: 4,
-    name: "Flexible Credit Hours",
-    icon: <FaChartBar />,
-    description:
-      "The calculator works seamlessly for all credit hour systems, including 1-5 credit hour subjects, adapting to university rule changes for new sessions.",
-  },
-  {
-    id: 5,
-    name: "Support for All Students",
-    icon: <FaHeadset />,
-    description:
-      "Whether you're checking your CGPA or GPA, our platform ensures accurate and reliable results tailored to your academic record.",
-  },
-];
+import { GiProgression } from "react-icons/gi";
+import { HiOutlineSparkles } from "react-icons/hi";
 
 const About = () => {
+  const [activeCard, setActiveCard] = useState(null);
+
+  const features = [
+    {
+      id: 1,
+      name: "One-Click Input",
+      icon: <FaUser />,
+      description:
+        "Simply enter your registration number - our system automatically fetches and processes your academic records.",
+      color: "from-emerald-500 to-emerald-600",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
+      bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+      borderColor: "border-emerald-100 dark:border-emerald-800/30",
+      longDescription:
+        "No manual data entry required. Our intelligent system connects with university records to provide instant results.",
+      stats: "Zero manual entry",
+    },
+    {
+      id: 2,
+      name: "Analytics",
+      icon: <FaGraduationCap />,
+      description:
+        "Get detailed semester breakdowns, subject-wise performance, and visual progress tracking.",
+      color: "from-blue-500 to-cyan-500",
+      iconColor: "text-blue-600 dark:text-blue-400",
+      bgColor: "bg-blue-50 dark:bg-blue-900/20",
+      borderColor: "border-blue-100 dark:border-blue-800/30",
+      longDescription:
+        "View complete academic history including grades, credit hours, and improvement opportunities.",
+      stats: "360° analysis",
+    },
+    {
+      id: 3,
+      name: "Calculations",
+      icon: <FaCalculator />,
+      description:
+        "Advanced algorithms handle grade replacements, credit hour variations, and university rule changes.",
+      color: "from-purple-500 to-violet-500",
+      iconColor: "text-purple-600 dark:text-purple-400",
+      bgColor: "bg-purple-50 dark:bg-purple-900/20",
+      borderColor: "border-purple-100 dark:border-purple-800/30",
+      longDescription:
+        "Smart calculations that adapt to different credit systems and automatically apply university policies.",
+      stats: "90%+ accuracy",
+    },
+    {
+      id: 4,
+      name: "Real-time Insights",
+      icon: <FaChartBar />,
+      description:
+        "Interactive charts and performance trends to help you understand your academic progress.",
+      color: "from-amber-500 to-yellow-500",
+      iconColor: "text-amber-600 dark:text-amber-400",
+      bgColor: "bg-amber-50 dark:bg-amber-900/20",
+      borderColor: "border-amber-100 dark:border-amber-800/30",
+      longDescription:
+        "Visualize your academic journey with interactive graphs and semester comparisons.",
+      stats: "updates",
+    },
+    {
+      id: 5,
+      name: "24/7 Support System",
+      icon: <FaHeadset />,
+      description:
+        "Dedicated help system with FAQ, tutorials, and community support for all students.",
+      color: "from-red-500 to-pink-500",
+      iconColor: "text-red-600 dark:text-red-400",
+      bgColor: "bg-red-50 dark:bg-red-900/20",
+      borderColor: "border-red-100 dark:border-red-800/30",
+      longDescription:
+        "Comprehensive support including detailed guides, troubleshooting, and student community.",
+      stats: "availability",
+    },
+ 
+  ];
+
+  const testimonials = [
+    { text: "Saved me time of manual calculation!", user: "Wahab Sadiq" },
+    { text: "Most accurate calculator for UAF students", user: "Haseeb Mirza" },
+    { text: "Game changer for academic planning", user: "M. Hanan" },
+  ];
+
   return (
-    <div className="flex flex-col justify-center items-center my-10 gap-8 px-4 md:px-8 lg:px-16">
-      <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
-        Uniqueness and Features
-      </h2>
-      <hr className="opacity-35 border-gray-500 dark:border-gray-600 w-[50%] pb-1" />
-
-      <div className="flex flex-col justify-center items-center text-center">
-        <p className="text-gray-600 dark:text-gray-300 font-light opacity-80 md:max-w-[70%] lg:max-w-[50%]">
-          Calculating CGPA and GPA manually is tough. You have to track credit
-          hours, marks, and quality points, which can get confusing and
-          time-consuming. I noticed many students struggle with this, and
-          existing tools often have gaps. So, I created a simple tool to help
-          University of Agriculture students calculate their CGPA and GPA
-          easily.
-        </p>
+    <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/30 via-white to-cyan-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 z-0">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-sky-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-500"></div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 w-full">
-        {aboutData.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="relative px-6 py-8 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1"
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12 sm:mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 rounded-full border border-emerald-200/50 dark:border-emerald-800/30 mb-4">
+            <HiOutlineSparkles className="text-emerald-600 dark:text-emerald-400" />
+            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+              Why Choose Our Platform
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-emerald-600 via-cyan-600 to-sky-600 dark:from-emerald-400 dark:via-cyan-300 dark:to-sky-400 bg-clip-text text-transparent">
+              Revolutionizing Academic
+            </span>
+            <br />
+            <span className="text-gray-800 dark:text-gray-200">
+              Calculations for UAF
+            </span>
+          </h2>
+
+          <div className="max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+              Calculating CGPA manually is complex and error-prone. You have to
+              track credit hours, grades, and quality points across multiple
+              semesters—it's confusing and time-consuming.
+            </p>
+            <p className=" text-gray-600 dark:text-gray-300 leading-relaxed text-sm font-light">
+              That's why I built this intelligent platform specifically for
+              University of Agriculture students. It's designed to eliminate the
+              guesswork and provide accurate, comprehensive academic insights.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Feature Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="relative group"
             >
-              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 text-black dark:text-white rounded-full flex items-center justify-center shadow-lg">
-                {React.cloneElement(item.icon, { size: 21 })}
+              <div
+                className={`relative h-full ${feature.bgColor} ${
+                  feature.borderColor
+                } border rounded-2xl p-6 sm:p-8 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl ${
+                  activeCard === feature.id
+                    ? "ring-2 ring-emerald-500/50 scale-[1.02]"
+                    : ""
+                }`}
+                onMouseEnter={() => setActiveCard(feature.id)}
+                onMouseLeave={() => setActiveCard(null)}
+                onClick={() =>
+                  setActiveCard(activeCard === feature.id ? null : feature.id)
+                }
+              >
+                {/* Hover Glow Effect */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}
+                ></div>
+
+                <div className="relative flex items-center gap-3 mb-4 sm:mb-6">
+                  {/* Icon */}
+                  <div
+                    className={`relative flex items-center justify-center 
+    w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg`}
+                  >
+                    <div className="text-lg sm:text-2xl text-white">
+                      {feature.icon}
+                    </div>
+
+                    {/* Glow */}
+                    <div
+                      className={`absolute -inset-2 bg-gradient-to-br ${feature.color} 
+      rounded-2xl blur-xl opacity-30 -z-10`}
+                    ></div>
+                  </div>
+
+                  {/* Text */}
+                  <div className="flex flex-1 items-center justify-between">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">
+                      {feature.name}
+                    </h3>
+
+                    <span
+                      className={`text-xs  font-light px-2.5 py-1
+      rounded-full ${feature.iconColor} ${feature.bgColor} border ${feature.borderColor}`}
+                    >
+                      {feature.stats}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Short Description */}
+                <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-4">
+                  {feature.description}
+                </p>
+
+                {/* Expand Button for Mobile */}
+                <div className="sm:hidden">
+                  <button
+                    className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveCard(
+                        activeCard === feature.id ? null : feature.id
+                      );
+                    }}
+                  >
+                    {activeCard === feature.id ? "Show Less" : "Learn More"}
+                    <FaChevronRight
+                      className={`transform transition-transform ${
+                        activeCard === feature.id ? "rotate-90" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Expanded Details */}
+                <AnimatePresence>
+                  {activeCard === feature.id && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-4 border-t border-gray-200 dark:border-gray-700/50 mt-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                          {feature.longDescription}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Bottom Accent */}
+                <div
+                  className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r ${feature.color} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                ></div>
               </div>
+            </motion.div>
+          ))}
+        </div>
 
-              <h2 className="font-semibold text-gray-800 dark:text-white text-xl mt-8 mb-2">
-                {item.name}
-              </h2>
-
-              <hr className="opacity-35 border-gray-500 dark:border-gray-600 w-full my-2" />
-
-              <p className="font-light text-gray-600 dark:text-gray-300 text-sm opacity-80 text-center">
-                {item.description}
-              </p>
+        {/* Testimonials & Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="bg-gradient-to-r from-white/80 to-gray-50/80 dark:from-gray-800/50 dark:to-gray-900/50 backdrop-blur-lg rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 sm:p-8"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Testimonials */}
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <FaStar className="text-amber-500" />
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                  Student Feedback
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {testimonials.map((testimonial, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="flex items-start gap-3 p-4 bg-white/50 dark:bg-gray-800/30 rounded-xl border border-gray-100/50 dark:border-gray-700/30"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-bold">
+                      {testimonial.user.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base italic">
+                        "{testimonial.text}"
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        - {testimonial.user}, UAF Student
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          );
-        })}
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 

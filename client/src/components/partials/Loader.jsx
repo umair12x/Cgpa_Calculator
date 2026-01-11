@@ -1,341 +1,338 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const Loader = () => {
   return (
     <StyledWrapper>
-      <div className="book">
-        <div className="book__pg-shadow" />
-        <div className="book__pg" />
-        <div className="book__pg book__pg--2" />
-        <div className="book__pg book__pg--3" />
-        <div className="book__pg book__pg--4" />
-        <div className="book__pg book__pg--5" />
+      <div className="loader-container">
+        {/* Main Atom Spinner */}
+        <div className="atom-spinner">
+          <div className="nucleus">
+            <div className="electron-ring electron-1">
+              <div className="electron"></div>
+            </div>
+            <div className="electron-ring electron-2">
+              <div className="electron"></div>
+            </div>
+            <div className="electron-ring electron-3">
+              <div className="electron"></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Floating Particles */}
+        <div className="particles">
+          {[...Array(12)].map((_, i) => (
+            <div key={i} className="particle" style={{ '--i': i }}></div>
+          ))}
+        </div>
+        
+        {/* Loading Text */}
+        <div className="loading-text">
+          <span className="text-char">A</span>
+          <span className="text-char">n</span>
+          <span className="text-char">a</span>
+          <span className="text-char">l</span>
+          <span className="text-char">y</span>
+          <span className="text-char">z</span>
+          <span className="text-char">i</span>
+          <span className="text-char">n</span>
+          <span className="text-char">g</span>
+          <span className="text-dots">
+            <span className="dot">.</span>
+            <span className="dot">.</span>
+            <span className="dot">.</span>
+          </span>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="progress-container">
+          <div className="progress-bar">
+            <div className="progress-fill"></div>
+          </div>
+          <div className="progress-text">Fetching academic records</div>
+        </div>
       </div>
     </StyledWrapper>
   );
 };
 
+const rotate = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const pulse = keyframes`
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+`;
+
+const float = keyframes`
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+`;
+
+const progress = keyframes`
+  0% { width: 0%; }
+  100% { width: 100%; }
+`;
+
+const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+`;
+
 const StyledWrapper = styled.div`
-  .book,
-  .book__pg-shadow,
-  .book__pg {
-    animation: cover 5s ease-in-out infinite;
+  .loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,253,250,0.9) 100%);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+    box-shadow: 
+      0 20px 60px rgba(16, 185, 129, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    @media (prefers-color-scheme: dark) {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(6, 78, 59, 0.9) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      box-shadow: 
+        0 20px 60px rgba(16, 185, 129, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
   }
-  .book {
-         background-color: #b7870f;
 
-    border-radius: 0.25em;
-    box-shadow: 0 0.25em 0.5em hsla(0, 0%, 0%, 0.3),
-      0 0 0 0.25em #d3a410 inset;
-    padding: 0.25em;
-    perspective: 37.5em;
+  .atom-spinner {
     position: relative;
-    width: 8em;
-    height: 6em;
-    transform: translate3d(0, 0, 0);
-    transform-style: preserve-3d;
+    width: 120px;
+    height: 120px;
   }
-  .book__pg-shadow,
-  .book__pg {
+
+  .nucleus {
     position: absolute;
-    left: 0.25em;
-    width: calc(50% - 0.25em);
-  }
-  .book__pg-shadow {
-    animation-name: shadow;
-    background-image: linear-gradient(
-      -45deg,
-      hsla(0, 0%, 0%, 0) 50%,
-      hsla(0, 0%, 0%, 0.3) 50%
-    );
-    filter: blur(0.25em);
-    top: calc(100% - 0.25em);
-    height: 3.75em;
-    transform: scaleY(0);
-    transform-origin: 100% 0%;
-  }
-  .book__pg {
-    animation-name: pg1;
-    background-color: hsl(223, 10%, 100%);
-    background-image: linear-gradient(
-      90deg,
-      hsla(223, 10%, 90%, 0) 87.5%,
-      hsl(223, 10%, 90%)
-    );
-    height: calc(100% - 0.5em);
-    transform-origin: 100% 50%;
-  }
-  .book__pg--2,
-  .book__pg--3,
-  .book__pg--4 {
-    background-image: repeating-linear-gradient(
-        hsl(223, 10%, 10%) 0 0.125em,
-        hsla(223, 10%, 10%, 0) 0.125em 0.5em
-      ),
-      linear-gradient(90deg, hsla(223, 10%, 90%, 0) 87.5%, hsl(223, 10%, 90%));
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 2.5em 4.125em, 100% 100%;
-  }
-  .book__pg--2 {
-    animation-name: pg2;
-  }
-  .book__pg--3 {
-    animation-name: pg3;
-  }
-  .book__pg--4 {
-    animation-name: pg4;
-  }
-  .book__pg--5 {
-    animation-name: pg5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #10b981, #0ea5e9);
+    border-radius: 50%;
+    animation: ${pulse} 2s ease-in-out infinite;
+    box-shadow: 
+      0 0 30px rgba(16, 185, 129, 0.5),
+      0 0 60px rgba(14, 165, 233, 0.3);
   }
 
-  /* Dark theme */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: hsl(223, 10%, 30%);
-      --fg: hsl(223, 10%, 90%);
+  .electron-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px dashed rgba(16, 185, 129, 0.3);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top: 2px solid #10b981;
+      border-right: 2px solid #0ea5e9;
     }
   }
 
-  /* Animations */
-  @keyframes cover {
-    from,
-    5%,
-    45%,
-    55%,
-    95%,
-    to {
-      animation-timing-function: ease-out;
-            background-color: #b7870f;
+  .electron-1 {
+    width: 100px;
+    height: 100px;
+    animation: ${rotate} 4s linear infinite;
+    
+    &::before {
+      animation: ${rotate} 3s linear infinite reverse;
+    }
+  }
 
-    }
-    10%,
-    40%,
-    60%,
-    90% {
-      animation-timing-function: ease-in;
-      background-color: #b7870f;
-;
-    }
-  }
-  @keyframes shadow {
-    from,
-    10.01%,
-    20.01%,
-    30.01%,
-    40.01% {
-      animation-timing-function: ease-in;
-      transform: translate3d(0, 0, 1px) scaleY(0) rotateY(0);
-    }
-    5%,
-    15%,
-    25%,
-    35%,
-    45%,
-    55%,
-    65%,
-    75%,
-    85%,
-    95% {
-      animation-timing-function: ease-out;
-      transform: translate3d(0, 0, 1px) scaleY(0.2) rotateY(90deg);
-    }
-    10%,
-    20%,
-    30%,
-    40%,
-    50%,
-    to {
-      animation-timing-function: ease-out;
-      transform: translate3d(0, 0, 1px) scaleY(0) rotateY(180deg);
-    }
-    50.01%,
-    60.01%,
-    70.01%,
-    80.01%,
-    90.01% {
-      animation-timing-function: ease-in;
-      transform: translate3d(0, 0, 1px) scaleY(0) rotateY(180deg);
-    }
-    60%,
-    70%,
-    80%,
-    90%,
-    to {
-      animation-timing-function: ease-out;
-      transform: translate3d(0, 0, 1px) scaleY(0) rotateY(0);
+  .electron-2 {
+    width: 80px;
+    height: 80px;
+    animation: ${rotate} 3s linear infinite reverse;
+    
+    &::before {
+      animation: ${rotate} 4s linear infinite;
     }
   }
-  @keyframes pg1 {
-    from,
-    to {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.4deg);
-    }
-    10%,
-    15% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(180deg);
-    }
-    20%,
-    80% {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(180deg);
-    }
-    85%,
-    90% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(180deg);
+
+  .electron-3 {
+    width: 60px;
+    height: 60px;
+    animation: ${rotate} 5s linear infinite;
+    
+    &::before {
+      animation: ${rotate} 2s linear infinite reverse;
     }
   }
-  @keyframes pg2 {
-    from,
-    to {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(0.3deg);
-    }
-    5%,
-    10% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.3deg);
-    }
-    20%,
-    25% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.9deg);
-    }
-    30%,
-    70% {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(179.9deg);
-    }
-    75%,
-    80% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.9deg);
-    }
-    90%,
-    95% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.3deg);
+
+  .electron {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #0ea5e9, #10b981);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
+  }
+
+  .particles {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+  }
+
+  .particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: linear-gradient(135deg, #10b981, #0ea5e9);
+    border-radius: 50%;
+    animation: ${float} 3s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.25s);
+    opacity: 0.6;
+    
+    &:nth-child(odd) {
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
     }
   }
-  @keyframes pg3 {
-    from,
-    10%,
-    90%,
-    to {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(0.2deg);
-    }
-    15%,
-    20% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.2deg);
-    }
-    30%,
-    35% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.8deg);
-    }
-    40%,
-    60% {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(179.8deg);
-    }
-    65%,
-    70% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.8deg);
-    }
-    80%,
-    85% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.2deg);
+
+  .loading-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    
+    @media (prefers-color-scheme: dark) {
+      color: #f1f5f9;
     }
   }
-  @keyframes pg4 {
-    from,
-    20%,
-    80%,
-    to {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(0.1deg);
-    }
-    25%,
-    30% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.1deg);
-    }
-    40%,
-    45% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.7deg);
-    }
-    50% {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(179.7deg);
-    }
-    55%,
-    60% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.7deg);
-    }
-    70%,
-    75% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0.1deg);
+
+  .text-char {
+    display: inline-block;
+    animation: ${bounce} 1s ease-in-out infinite;
+    animation-delay: calc(var(--char-index) * 0.1s);
+  }
+
+  .text-dots {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .dot {
+    animation: ${bounce} 1.5s ease-in-out infinite;
+    
+    &:nth-child(1) { animation-delay: 0s; }
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+
+  .progress-container {
+    width: 280px;
+    max-width: 100%;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    
+    @media (prefers-color-scheme: dark) {
+      background: rgba(16, 185, 129, 0.2);
     }
   }
-  @keyframes pg5 {
-    from,
-    30%,
-    70%,
-    to {
-      animation-timing-function: ease-in;
-      background-color: hsl(223, 10%, 45%);
-      transform: translate3d(0, 0, 1px) rotateY(0);
+
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #0ea5e9, #8b5cf6);
+    border-radius: 4px;
+    animation: ${progress} 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    color: #64748b;
+    text-align: center;
+    font-weight: 500;
+    
+    @media (prefers-color-scheme: dark) {
+      color: #94a3b8;
     }
-    35%,
-    40% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0deg);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .loader-container {
+      padding: 30px;
+      gap: 30px;
     }
-    50% {
-      animation-timing-function: ease-in-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(179.6deg);
+    
+    .atom-spinner {
+      width: 100px;
+      height: 100px;
     }
-    60%,
-    65% {
-      animation-timing-function: ease-out;
-      background-color: hsl(223, 10%, 100%);
-      transform: translate3d(0, 0, 1px) rotateY(0);
+    
+    .electron-1 { width: 85px; height: 85px; }
+    .electron-2 { width: 65px; height: 65px; }
+    .electron-3 { width: 45px; height: 45px; }
+    
+    .loading-text {
+      font-size: 1.25rem;
+    }
+    
+    .progress-container {
+      width: 240px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .loader-container {
+      padding: 20px;
+      gap: 20px;
+    }
+    
+    .atom-spinner {
+      width: 80px;
+      height: 80px;
+    }
+    
+    .electron-1 { width: 70px; height: 70px; }
+    .electron-2 { width: 50px; height: 50px; }
+    .electron-3 { width: 30px; height: 30px; }
+    
+    .nucleus {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .loading-text {
+      font-size: 1.1rem;
+    }
+    
+    .progress-container {
+      width: 200px;
     }
   }
 `;

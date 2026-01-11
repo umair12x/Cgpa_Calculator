@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { CiMail } from "react-icons/ci";
-import { FaWhatsapp } from "react-icons/fa";
-import { FiSend, FiMessageSquare, FiUser } from "react-icons/fi";
-import { MdOutlineEmail } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaWhatsapp, FaPaperPlane, FaUser, FaComment } from "react-icons/fa";
+import { MdEmail, MdSmartphone } from "react-icons/md";
+import { RiMessage2Line } from "react-icons/ri";
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     message: "",
   });
+  const [isSending, setIsSending] = useState(false);
+  const [activeMethod, setActiveMethod] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,193 +21,290 @@ const Contact = () => {
     }));
   };
 
-  const handleWhatsAppRedirect = () => {
-    if (!formData.name.trim() || !formData.message.trim()) {
-      alert("Please enter your name and message before sending via WhatsApp");
-      return;
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      alert("Please enter your name");
+      return false;
     }
+    if (!formData.message.trim()) {
+      alert("Please enter your message");
+      return false;
+    }
+    if (formData.message.trim().length < 10) {
+      alert("Please enter a message of at least 10 characters");
+      return false;
+    }
+    return true;
+  };
+
+  const handleContact = (method) => {
+    if (!validateForm()) return;
+
+    setIsSending(true);
+    setActiveMethod(method);
 
     const phoneNumber = "923095330695";
     const encodedMessage = encodeURIComponent(
-      `Hello! My name is ${formData.name}. ${formData.message}`
+      `👋 Hello! My name is *${formData.name}*\n\n💬 Message:\n${formData.message}\n\n📱 Sent via CGPA Calculator`
     );
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, "_blank");
-  };
 
-  const handleEmailRedirect = () => {
-    if (!formData.name.trim() || !formData.message.trim()) {
-      alert("Please enter your name and message before sending via Email");
-      return;
+    let url;
+    switch (method) {
+      case 'whatsapp':
+        url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        break;
+      case 'email':
+        const subject = encodeURIComponent(`Message from ${formData.name} - UAF CGPA Calculator`);
+        const body = encodeURIComponent(
+          `Sender Name: ${formData.name}\n\nMessage:\n${formData.message}\n\nSent via UAF CGPA Calculator Contact Form`
+        );
+        url = `mailto:umairim24@gmail.com?subject=${subject}&body=${body}`;
+        break;
+      default:
+        return;
     }
 
-    const email = "umairim24@gmail.com";
-    const subject = encodeURIComponent(
-      `Message from ${formData.name} - CGPA Calculator Project`
-    );
-    const body = encodeURIComponent(
-      `Sender Name: ${formData.name}\n\nMessage:\n${formData.message}`
-    );
-    const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
-    window.open(mailtoUrl, "_blank");
+    setTimeout(() => {
+      window.open(url, "_blank");
+      setIsSending(false);
+      setActiveMethod(null);
+    }, 800);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (validateForm()) {
+      // Show contact method options
+      setIsSending(true);
+      setTimeout(() => setIsSending(false), 1000);
+    }
   };
 
   return (
-    <section className="py-16 md:py-20">
-      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-        <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 mb-6">
-            <FiMessageSquare className="text-2xl text-white" />
+    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10 sm:mb-12"
+        >
+          <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl shadow-lg mb-4">
+            <HiOutlineChatBubbleLeftRight className="text-2xl text-white" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">
-            Get In Touch
+          <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent mb-3">
+            Quick Contact
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
-            Have questions about the CGPA Calculator? Let's discuss how we can
-            improve your academic planning.
+          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base max-w-md mx-auto">
+            Need help or have feedback? Reach out instantly.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start">
-          <div className="space-y-8">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700 transition-all hover:shadow-xl">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                  <CiMail className="text-2xl text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-                    Email Contact
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Send me a detailed message
-                  </p>
-                </div>
+        {/* Contact Form Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-900/90 dark:to-gray-800/90 backdrop-blur-xl rounded-2xl shadow-xl shadow-emerald-500/10 dark:shadow-emerald-900/20 border border-white/20 dark:border-gray-700/30 p-5 sm:p-6 lg:p-8"
+        >
+          {/* Form Header */}
+          <div className="mb-6 sm:mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 rounded-lg">
+                <RiMessage2Line className="text-emerald-600 dark:text-emerald-400" />
               </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Perfect for longer inquiries or detailed discussions about the
-                CGPA Calculator features.
-              </p>
-              <button
-                onClick={handleEmailRedirect}
-                className="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-3 group"
-              >
-                <MdOutlineEmail className="text-xl group-hover:scale-110 transition-transform" />
-                Send via Email
-              </button>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
+                Send a Message
+              </h3>
             </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700 transition-all hover:shadow-xl">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900/30 flex items-center justify-center">
-                  <FaWhatsapp className="text-2xl text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-                    WhatsApp Chat
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Quick responses & real-time chat
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Ideal for quick questions, instant feedback, or real-time
-                discussions about the project.
-              </p>
-              <button
-                onClick={handleWhatsAppRedirect}
-                className="w-full py-3 px-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-3 group"
-              >
-                <FaWhatsapp className="text-xl group-hover:scale-110 transition-transform" />
-                Send via WhatsApp
-              </button>
-            </div>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Fill once, send anywhere. Your message is ready in seconds.
+            </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-                Write Your Message
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Fill in your details and message, then choose your preferred
-                contact method.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+            {/* Name Input */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Your Name
+              </label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  <FiUser />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500 dark:text-emerald-400">
+                  <FaUser className="w-4 h-4" />
                 </div>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  placeholder="Enter your name"
                   required
-                  placeholder="Your Name"
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white placeholder-gray-400"
+                  className="w-full pl-10 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base"
                 />
               </div>
+            </div>
 
+            {/* Message Input */}
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Your Message
+              </label>
               <div className="relative">
-                <div className="absolute left-4 top-6 text-gray-400">
-                  <FiMessageSquare />
+                <div className="absolute left-3 top-3 text-emerald-500 dark:text-emerald-400">
+                  <FaComment className="w-4 h-4" />
                 </div>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
+                  placeholder="Share your feedback, questions, or suggestions..."
+                  rows="4"
                   required
-                  placeholder="Your message about the CGPA Calculator project..."
-                  rows="6"
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-800 dark:text-white placeholder-gray-400 resize-none"
+                  className="w-full pl-10 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 rounded-xl focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-sm sm:text-base resize-none"
                 />
               </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {formData.message.length}/500 characters
+              </div>
+            </div>
 
-              <div className="pt-4">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-                  <h4 className="font-semibold text-gray-800 dark:text-white mb-3">
-                    Ready to Send?
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Your message will be sent with: <br />
-                    <span className="font-medium">Name:</span>{" "}
-                    {formData.name || "______"} <br />
-                    <span className="font-medium">Message:</span>{" "}
-                    {formData.message
-                      ? formData.message.substring(0, 50) +
-                        (formData.message.length > 50 ? "..." : "")
-                      : "______"}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button
-                      type="button"
-                      onClick={handleEmailRedirect}
-                      className="flex-1 py-3 px-4 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-                    >
-                      <CiMail />
-                      Send Email
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleWhatsAppRedirect}
-                      className="flex-1 py-3 px-4 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-                    >
-                      <FaWhatsapp />
-                      Send WhatsApp
-                    </button>
+            {/* Preview Card */}
+            <AnimatePresence>
+              {(formData.name || formData.message) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="bg-gradient-to-r from-emerald-50/50 to-cyan-50/50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl p-4 border border-emerald-100/50 dark:border-emerald-800/30"
+                >
+                  <div className="text-xs font-medium text-emerald-700 dark:text-emerald-300 mb-2">
+                    Message Preview
                   </div>
+                  <div className="space-y-2">
+                    {formData.name && (
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          <span className="font-medium">From:</span> {formData.name}
+                        </span>
+                      </div>
+                    )}
+                    {formData.message && (
+                      <div className="flex items-start gap-2">
+                        <div className="w-2 h-2 rounded-full bg-cyan-500 mt-1"></div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {formData.message.length > 100 
+                            ? formData.message.substring(0, 100) + '...' 
+                            : formData.message}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Contact Methods */}
+            <div className="pt-2">
+              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Send via:
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* WhatsApp Button */}
+                <motion.button
+                  type="button"
+                  onClick={() => handleContact('whatsapp')}
+                  disabled={isSending}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`relative overflow-hidden py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-3 ${
+                    activeMethod === 'whatsapp'
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                      : 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/20 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40'
+                  } border border-green-100 dark:border-green-800/30`}
+                >
+                  {isSending && activeMethod === 'whatsapp' ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaWhatsapp className="text-lg" />
+                      <span>WhatsApp</span>
+                    </>
+                  )}
+                </motion.button>
+
+                {/* Email Button */}
+                <motion.button
+                  type="button"
+                  onClick={() => handleContact('email')}
+                  disabled={isSending}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`relative overflow-hidden py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-3 ${
+                    activeMethod === 'email'
+                      ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+                      : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40'
+                  } border border-blue-100 dark:border-blue-800/30`}
+                >
+                  {isSending && activeMethod === 'email' ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <MdEmail className="text-lg" />
+                      <span>Email</span>
+                    </>
+                  )}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Quick Contact Info */}
+            <div className="pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <MdSmartphone className="text-emerald-500" />
+                  <span>+92 309 5330695</span>
+                </div>
+                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <MdEmail className="text-emerald-500" />
+                  <span>umairim24@gmail.com</span>
                 </div>
               </div>
-            </form>
+            </div>
+          </form>
+
+          {/* Send Button (Alternative) */}
+          <motion.div 
+            className="mt-6 sm:mt-8"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={isSending}
+              className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/20 dark:shadow-emerald-900/30 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FaPaperPlane className="text-lg" />
+              <span>Prepare Message</span>
+            </button>
+          </motion.div>
+        </motion.div>
+
+        {/* Responsive Tips */}
+        <div className="mt-6 sm:mt-8 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-900/50 rounded-full border border-gray-200 dark:border-gray-700">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span className="text-xs text-gray-600 dark:text-gray-400">
+              Choose your preferred contact method above
+            </span>
           </div>
         </div>
       </div>

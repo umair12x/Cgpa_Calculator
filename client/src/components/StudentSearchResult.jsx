@@ -1,21 +1,30 @@
 import React, { useState } from "react";
-import { FaIdCardClip } from "react-icons/fa6";
+import { FaIdCardClip, FaCalculator } from "react-icons/fa6";
+import { motion, AnimatePresence } from "framer-motion";
 import Input from "./partials/Input";
-import { motion } from "framer-motion";
 import Loader from "./partials/Loader";
 import Button from "./partials/Button";
-import { FaCalculator } from "react-icons/fa";
+import { RiGraduationCapFill } from "react-icons/ri";
 
 const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
   const [regNo, setregNo] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!regNo.trim()) {
       setAlertMessage({
         type: "error",
-        message: "Please enter a valid register number.",
+        message: "Please enter a valid registration number",
+      });
+      return;
+    }
+
+    if (!/^\d{4}-ag-\d{1,6}$/.test(regNo.trim())) {
+      setAlertMessage({
+        type: "error",
+        message: "Please use format: YYYY-ag-NNNNNN",
       });
       return;
     }
@@ -24,7 +33,7 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
 
     try {
       const userData = { regNo: regNo.trim() };
-      console.log("Data:", userData);
+      console.log("Fetching data for:", userData);
 
       const response = await fetch("http://localhost:5000/Cgpa/result", {
         method: "POST",
@@ -37,13 +46,13 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
       const data = await response.json();
       setStudentResponse(data);
       setAlertMessage({
-        type: data.type,
-        message: data.message,
+        type: data.type || "success",
+        message: data.message || "Result fetched successfully",
       });
     } catch (error) {
       setAlertMessage({
         type: "error",
-        message: "An error occurred. Please try again.",
+        message: "Network error. Please check your connection and try again.",
       });
       console.error("Error:", error);
     } finally {
@@ -53,46 +62,119 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
 
   return (
     <motion.div
-      className="max-w-lg mx-auto rounded-lg p-3"
-      initial={{ y: 25 }}
-      animate={{ y: 0 }}
-      transition={{ type: "tween", duration: 0.25 }}
+      className="w-full max-w-2xl mx-auto my-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <h2 className="text-center text-2xl font-semibold drop-shadow-lg text-gray-800 dark:text-white mb-4">
-        Student Result Search
-      </h2>
-      <hr className="border-gray-300 my-5 dark:border-gray-600" />
+      <div className="relative bg-gradient-to-br from-white/90 to-white/70 dark:from-gray-900/90 dark:to-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-emerald-500/10 dark:shadow-emerald-900/20 border border-white/20 dark:border-gray-700/30 p-6 sm:p-8 md:p-10">
+        {/* Decorative elements */}
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-emerald-400/20 to-cyan-400/20 rounded-full blur-2xl"></div>
+        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-sky-400/10 to-cyan-400/10 rounded-full blur-2xl"></div>
 
-      <form onSubmit={handleSubmit}>
-        <label
-          htmlFor="register"
-          className="flex flex-col gap-1 font-medium mb-3 text-gray-700 dark:text-gray-300"
-        >
-          <p className="flex items-center gap-1">
-            <FaIdCardClip /> Register:
-          </p>
-        </label>
-
-        <div className="mb-4 gap-0.5 md:gap-2 min-h-[40px] flex items-center justify-center">
-          <Input value={regNo} setregNo={setregNo} disabled={loading} />
-
-          {loading ? (
-            <div className="min-h-[40px] min-w-[40px] max-h-[50px] flex items-center justify-center">
-              &nbsp;
+        {/* Header */}
+        <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-5">
+          <div className="relative">
+            <div className="p-3 sm:p-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl sm:rounded-2xl shadow-md">
+              <RiGraduationCapFill className="text-xl sm:text-2xl text-white" />
             </div>
-          ) : (
-            <Button disabled={loading} text={<FaCalculator className="icon" />} />
-          )}
-        </div>
-        <div className="mt-1 text-[11px] text-center text-gray-500 dark:text-gray-400">
-          Format: 4-digit year - ag - digit number
-        </div>
-        {loading && (
-          <div className="flex m-5 p-10 items-center justify-center">
-            <Loader />
           </div>
-        )}
-      </form>
+          <div>
+            <h2 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-600 via-cyan-600 to-sky-600 dark:from-emerald-400 dark:via-cyan-300 dark:to-sky-400 bg-clip-text text-transparent">
+              Student Result Portal
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-0.5">
+              Enter your registration number to calculate CGPA
+            </p>
+          </div>
+        </div>
+
+        <motion.form
+          onSubmit={handleSubmit}
+          className="space-y-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {/* Input Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                <FaIdCardClip className="text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <span className="font-semibold">Registration Number</span>
+            </div>
+
+            <div className="relative group">
+              <Input
+                value={regNo}
+                setregNo={setregNo}
+                disabled={loading}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+
+              {/* Focus indicator */}
+              <motion.div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                animate={{
+                  boxShadow: isFocused
+                    ? "0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 30px rgba(16, 185, 129, 0.1)"
+                    : "0 0 0 0px rgba(16, 185, 129, 0)",
+                }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+
+            {/* Format Helper */}
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+              <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                <span>Format: 2024-ag-123456</span>
+              </div>
+              <div className="text-emerald-600 dark:text-emerald-400 font-medium">
+                {regNo.length}/14 characters
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <motion.div
+            className="pt-2"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Button
+              type="submit"
+              disabled={loading || !regNo.trim()}
+              isLoading={loading}
+              text={
+                <span className="flex items-center gap-2">
+                  <FaCalculator className="text-lg" />
+                  Calculate CGPA
+                </span>
+              }
+              onClick={handleSubmit}
+            />
+          </motion.div>
+        </motion.form>
+
+        {/* Loading Overlay */}
+        <AnimatePresence>
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-10"
+            >
+              <div className="relative">
+                <Loader />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 };

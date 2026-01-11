@@ -1,31 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { FaRegCopy, FaCheck } from "react-icons/fa6";
 
-const Input = ({ value, setregNo , disable }) => {
+const Input = ({ value, setregNo, disabled, onFocus, onBlur }) => {
   const [theme, setTheme] = useState("light");
+  const [isFocused, setIsFocused] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const inputRef = useRef(null);
 
-  // Detect theme from parent
   useEffect(() => {
     const detectTheme = () => {
       const htmlElement = document.documentElement;
-      if (htmlElement.classList.contains("dark")) {
-        setTheme("dark");
-      } else {
-        setTheme("light");
-      }
+      setTheme(htmlElement.classList.contains("dark") ? "dark" : "light");
     };
 
     detectTheme();
-    
-    // Create a MutationObserver to watch for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          detectTheme();
-        }
-      });
-    });
-
+    const observer = new MutationObserver(detectTheme);
     observer.observe(document.documentElement, { attributes: true });
     
     return () => observer.disconnect();
@@ -33,9 +23,8 @@ const Input = ({ value, setregNo , disable }) => {
 
   const handleInput = (e) => {
     const input = e.target.value;
-    let raw = input.replace(/[^0-9a-z-]/gi, ""); // Allow numbers, letters, and hyphens
+    let raw = input.replace(/[^0-9a-z-]/gi, "");
     
-    // If user is typing after the format, preserve the format
     if (raw.includes("-ag-")) {
       const parts = raw.split("-ag-");
       if (parts.length === 2) {
@@ -49,10 +38,9 @@ const Input = ({ value, setregNo , disable }) => {
         }
       }
     } else {
-      // User is typing at the beginning
       let numbersOnly = raw.replace(/[^0-9]/g, "");
       let year = numbersOnly.slice(0, 4);
-      let rest = numbersOnly.slice(4, 10); // Max 6 digits after year
+      let rest = numbersOnly.slice(4, 10);
       
       let formatted = year;
       if (year.length === 4 && rest.length > 0) {
@@ -65,45 +53,43 @@ const Input = ({ value, setregNo , disable }) => {
     }
   };
 
+  const handleFocus = () => {
+    setIsFocused(true);
+    onFocus?.();
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    onBlur?.();
+  };
+
+  const handleCopy = () => {
+    if (value) {
+      navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleKeyDown = (e) => {
-    // Prevent typing letters in the number parts
     const cursorPos = e.target.selectionStart;
-    const value = e.target.value;
+    const key = e.key;
     
-    // If cursor is in year part (positions 0-3) or number part (positions 8-13)
     if (cursorPos >= 0 && cursorPos <= 3) {
-      // In year part, only allow numbers
-      if (!/^\d$/.test(e.key) && 
-          e.key !== 'Backspace' && 
-          e.key !== 'Delete' && 
-          e.key !== 'Tab' && 
-          e.key !== 'ArrowLeft' && 
-          e.key !== 'ArrowRight' &&
-          !e.ctrlKey && 
-          !e.metaKey) {
+      if (!/^\d$/.test(key) && 
+          !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(key) &&
+          !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
       }
     } else if (cursorPos >= 8 && cursorPos <= 13) {
-      // In number part, only allow numbers
-      if (!/^\d$/.test(e.key) && 
-          e.key !== 'Backspace' && 
-          e.key !== 'Delete' && 
-          e.key !== 'Tab' && 
-          e.key !== 'ArrowLeft' && 
-          e.key !== 'ArrowRight' &&
-          !e.ctrlKey && 
-          !e.metaKey) {
+      if (!/^\d$/.test(key) && 
+          !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(key) &&
+          !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
       }
     } else if (cursorPos >= 4 && cursorPos <= 7) {
-      // In "-ag-" part, prevent any typing
-      if (e.key !== 'Backspace' && 
-          e.key !== 'Delete' && 
-          e.key !== 'Tab' && 
-          e.key !== 'ArrowLeft' && 
-          e.key !== 'ArrowRight' &&
-          !e.ctrlKey && 
-          !e.metaKey) {
+      if (!['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(key) &&
+          !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
       }
     }
@@ -123,31 +109,62 @@ const Input = ({ value, setregNo , disable }) => {
     }
   };
 
+  const isValidFormat = /^\d{4}-ag-\d{1,6}$/.test(value);
+
   return (
-    <StyledWrapper theme={theme}>
+    <StyledWrapper theme={theme} isFocused={isFocused} isValid={isValidFormat} hasValue={!!value}>
       <div className="input-container">
-        <input
-          type="password"
-          placeholder="2022-ag-00000"
-          autoComplete="off"
-          required
-          onChange={handleInput}
-          onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
-          className="input-field"
-          name="registerNo"
-          value={value}
-          maxLength={14}
-          disabled={disable}
-        />
-        <div className="input-format">
-          <span className="format-year">{value.slice(0, 4) || 'YYYY'}</span>
-          <span className="format-dash">-</span>
-          <span className="format-ag">ag</span>
-          <span className="format-dash">-</span>
-          <span className="format-number">{value.slice(8) || 'NNNNNN'}</span>
+        <div className="input-wrapper">
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="2024-ag-000000"
+            autoComplete="off"
+            required
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className="input-field"
+            name="registerNo"
+            value={value}
+            maxLength={14}
+            disabled={disabled}
+          />
+          
+          <div className="format-overlay">
+            <span className={`segment year ${value.slice(0,4) ? 'filled' : ''}`}>
+              {value.slice(0,4) || 'YYYY'}
+            </span>
+            <span className="separator">-</span>
+            <span className="segment ag">ag</span>
+            <span className="separator">-</span>
+            <span className={`segment number ${value.slice(8) ? 'filled' : ''}`}>
+              {value.slice(8) || 'NNNNNN'}
+            </span>
+          </div>
+          
+          {value && (
+            <button 
+              type="button" 
+              className="copy-button"
+              onClick={handleCopy}
+              aria-label={copied ? "Copied!" : "Copy registration number"}
+            >
+              {copied ? <FaCheck className="text-emerald-500" /> : <FaRegCopy />}
+            </button>
+          )}
         </div>
-     
+        
+        <div className="input-indicators">
+          <div className={`status-dot ${isValidFormat ? 'valid' : value ? 'invalid' : 'empty'}`}></div>
+          <span className="status-text">
+            {!value ? 'Enter registration number' : 
+             isValidFormat ? 'Valid format' : 
+             'Invalid format - use YYYY-ag-NNNNNN'}
+          </span>
+        </div>
       </div>
     </StyledWrapper>
   );
@@ -155,137 +172,218 @@ const Input = ({ value, setregNo , disable }) => {
 
 const StyledWrapper = styled.div`
   .input-container {
-    position: relative;
     width: 100%;
-    max-width: 280px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    background: ${({ theme }) => theme === 'dark' ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)'};
+    border-radius: 16px;
+    padding: 4px;
+    backdrop-filter: blur(10px);
+    border: 1px solid ${({ theme, isFocused }) => 
+      isFocused 
+        ? (theme === 'dark' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(16, 185, 129, 0.4)')
+        : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)')};
+    box-shadow: ${({ theme, isFocused }) => 
+      isFocused 
+        ? (theme === 'dark' 
+            ? '0 0 0 1px rgba(16, 185, 129, 0.3), 0 8px 32px rgba(16, 185, 129, 0.1)' 
+            : '0 0 0 1px rgba(16, 185, 129, 0.2), 0 8px 32px rgba(16, 185, 129, 0.08)')
+        : (theme === 'dark' 
+            ? '0 4px 24px rgba(0, 0, 0, 0.2)' 
+            : '0 4px 24px rgba(0, 0, 0, 0.06)')};
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .input-field {
     width: 100%;
-    padding: 10px 15px 5px 15px;
-    padding-top: 15px; /* Make room for the format overlay */
-    border-radius: 8px;
+    padding: 22px 52px 8px 20px;
+    background: transparent;
+    border: none;
     outline: none;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    background-color: ${({ theme }) =>
-      theme === "dark" ? "#1e293b" : "#ffffff"};
-    color: ${({ theme }) =>
-      theme === "dark" ? "#ffffff" : "#000000"};
-    border: 1px solid
-      ${({ theme }) =>
-        theme === "dark" ? "#3b82f6" : "#d1b54a"};
-    transition: all 0.3s ease;
-    font-family: monospace;
-    caret-color: ${({ theme }) =>
-      theme === "dark" ? "#60a5fa" : "#c9a227"};
+    font-size: 18px;
+    font-weight: 500;
+    color: ${({ theme }) => theme === 'dark' ? '#f1f5f9' : '#1e293b'};
+    font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+    letter-spacing: 1px;
+    caret-color: #10b981;
+    
+    &::placeholder {
+      color: transparent;
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   }
 
-  .input-field::placeholder {
-    color: transparent;
-  }
-
-  .input-field:focus {
-    border-color: ${({ theme }) =>
-      theme === "dark" ? "#60a5fa" : "#c9a227"};
-    box-shadow: 0 0 0 3px
-      ${({ theme }) =>
-        theme === "dark"
-          ? "rgba(59, 130, 246, 0.25)"
-          : "rgba(201, 162, 39, 0.25)"};
-    background-color: ${({ theme }) =>
-      theme === "dark" ? "#0f172a" : "#fefce8"};
-  }
-
-  .input-field:invalid {
-    animation: shake 0.3s forwards;
-    border-color: ${({ theme }) =>
-      theme === "dark" ? "#ef4444" : "#dc2626"};
-  }
-
-  .input-format {
+  .format-overlay {
     position: absolute;
-    top: 5px;
-    left: 16px;
-    font-size: 12px;
+    top: 8px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
     pointer-events: none;
-    font-family: monospace;
-    letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
   }
 
-  .format-year {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#60a5fa" : "#2563eb"};
-    font-weight: 600;
+  .segment {
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    
+    &.year {
+      color: ${({ theme, hasValue }) => 
+        hasValue 
+          ? (theme === 'dark' ? '#34d399' : '#059669') 
+          : (theme === 'dark' ? '#64748b' : '#94a3b8')};
+      font-weight: ${({ hasValue }) => hasValue ? '600' : '400'};
+      background: ${({ theme, hasValue }) => 
+        hasValue 
+          ? (theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(5, 150, 105, 0.05)')
+          : 'transparent'};
+    }
+    
+    &.ag {
+      color: ${({ theme }) => theme === 'dark' ? '#22d3ee' : '#0891b2'};
+      font-weight: 500;
+      background: ${({ theme }) => 
+        theme === 'dark' ? 'rgba(34, 211, 238, 0.1)' : 'rgba(8, 145, 178, 0.05)'};
+    }
+    
+    &.number {
+      color: ${({ theme, hasValue }) => 
+        hasValue 
+          ? (theme === 'dark' ? '#60a5fa' : '#2563eb') 
+          : (theme === 'dark' ? '#64748b' : '#94a3b8')};
+      font-weight: ${({ hasValue }) => hasValue ? '600' : '400'};
+      background: ${({ theme, hasValue }) => 
+        hasValue 
+          ? (theme === 'dark' ? 'rgba(96, 165, 250, 0.1)' : 'rgba(37, 99, 235, 0.05)')
+          : 'transparent'};
+    }
+    
+    &.filled {
+      transform: translateY(-1px);
+    }
   }
 
-  .format-ag {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#34d399" : "#059669"};
+  .separator {
+    color: ${({ theme }) => theme === 'dark' ? '#94a3b8' : '#cbd5e1'};
+  }
+
+  .copy-button {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: ${({ theme }) => theme === 'dark' ? 'rgba(30, 41, 59, 0.8)' : 'rgba(255, 255, 255, 0.8)'};
+    border: 1px solid ${({ theme }) => theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
+    border-radius: 10px;
+    padding: 8px;
+    color: ${({ theme }) => theme === 'dark' ? '#94a3b8' : '#64748b'};
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background: ${({ theme }) => theme === 'dark' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)'};
+      color: ${({ theme }) => theme === 'dark' ? '#34d399' : '#10b981'};
+      border-color: ${({ theme }) => theme === 'dark' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(16, 185, 129, 0.2)'};
+      transform: translateY(-50%) scale(1.05);
+    }
+    
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+
+  .input-indicators {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 4px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    
+    &.empty {
+      background: ${({ theme }) => theme === 'dark' ? '#64748b' : '#cbd5e1'};
+    }
+    
+    &.valid {
+      background: #10b981;
+      box-shadow: 0 0 0 2px ${({ theme }) => 
+        theme === 'dark' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(16, 185, 129, 0.2)'};
+    }
+    
+    &.invalid {
+      background: #ef4444;
+      animation: pulse 2s ease-in-out infinite;
+    }
+  }
+
+  .status-text {
+    font-size: 12px;
+    color: ${({ theme }) => theme === 'dark' ? '#94a3b8' : '#64748b'};
     font-weight: 500;
   }
 
-  .format-number {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#fbbf24" : "#d97706"};
-    font-weight: 600;
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
-
-  .format-dash {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#94a3b8" : "#6b7280"};
-  }
-
- 
 
   @keyframes shake {
-    0%, 100% {
-      transform: translateX(0);
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .input-field {
+      padding: 20px 48px 6px 16px;
+      font-size: 16px;
     }
-    25% {
-      transform: translateX(4px);
+    
+    .format-overlay {
+      font-size: 12px;
+      left: 16px;
     }
-    50% {
-      transform: translateX(-4px);
-    }
-    75% {
-      transform: translateX(4px);
+    
+    .copy-button {
+      right: 12px;
+      padding: 6px;
     }
   }
 
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .input-container {
-      max-width: 100%;
-    }
-    
+  @media (max-width: 480px) {
     .input-field {
-      padding: 10px 14px;
-      padding-top: 26px;
+      padding: 18px 44px 4px 12px;
       font-size: 15px;
     }
     
-    .input-format {
-      font-size: 10px;
-      top: 6px;
-      left: 14px;
+    .format-overlay {
+      font-size: 11px;
+      left: 12px;
     }
-  }
-
-  /* Focus state improvements */
-  .input-field:focus + .input-format .format-year {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#93c5fd" : "#1d4ed8"};
-  }
-  
-  .input-field:focus + .input-format .format-ag {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#6ee7b7" : "#047857"};
-  }
-  
-  .input-field:focus + .input-format .format-number {
-    color: ${({ theme }) =>
-      theme === "dark" ? "#fcd34d" : "#b45309"};
+    
+    .status-text {
+      font-size: 11px;
+    }
   }
 `;
 
