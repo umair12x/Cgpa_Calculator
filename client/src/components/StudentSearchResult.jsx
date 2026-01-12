@@ -34,12 +34,11 @@ const StudentResultSearch = ({ setStudentResponse, setAlertMessage }) => {
     try {
       const userData = { regNo: regNo.trim() };
       console.log("Fetching data for:", userData);
-
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/Cgpa/result`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/Cgpa/result`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-           "x-api-key": process.env.REACT_APP_API_KEY,
+           "x-api-key": import.meta.env.VITE_API_KEY,
         },
         body: JSON.stringify(userData),
       });
