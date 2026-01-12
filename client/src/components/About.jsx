@@ -6,20 +6,9 @@ import {
   FaCalculator,
   FaChartBar,
   FaHeadset,
-  FaLightbulb,
-  FaRobot,
-  FaDatabase,
-  FaSyncAlt,
-  FaShieldAlt,
-  FaRocket,
-  FaUniversity,
   FaChevronRight,
-  FaExternalLinkAlt,
   FaStar,
-  FaCheckCircle,
-  FaMagic,
 } from "react-icons/fa";
-import { GiProgression } from "react-icons/gi";
 import { HiOutlineSparkles } from "react-icons/hi";
 
 const About = () => {

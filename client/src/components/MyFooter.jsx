@@ -1,8 +1,5 @@
 import React from "react";
 import {
-  FaGithub,
-  FaLinkedin,
-  FaFacebook,
   FaHeart,
   FaCode,
   FaGraduationCap,
@@ -17,7 +14,7 @@ import { motion } from "framer-motion";
 
 const MyFooter = () => {
   const currentYear = new Date().getFullYear();
-  const version = "1.2.0";
+  const version = "4.0";
 
   const technologies = [
     "React",

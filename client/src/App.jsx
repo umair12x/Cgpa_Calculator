@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import NavBar from "./components/navbar";
 import MyFooter from "./components/MyFooter";
-import Output from "./components/Responser";
+import Responser from "./components/Responser";
 import UseAccordian from "./components/UseAccordian";
 import Hero from "./components/Hero";
 import Contact from "./components/Contact";
@@ -41,14 +41,9 @@ const SectionRouter = ({ setAlertMessage }) => {
       </section>
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-8 space-y-12 md:space-y-16">
-        {/* Home section with calculator */}
-        <section id="home" aria-labelledby="home-heading">
-          <Output setAlertMessage={setAlertMessage} className="z-10" />
-        </section>
-
-        {/* Calculator section (duplicate for direct navigation) */}
+        {/* About section */}
         <section id="calculator" aria-labelledby="calculator-heading">
-          <Output setAlertMessage={setAlertMessage} className="z-10" />
+          <Responser setAlertMessage={setAlertMessage} className="z-10" />
         </section>
 
         {/* About section */}

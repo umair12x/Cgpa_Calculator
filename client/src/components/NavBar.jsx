@@ -7,15 +7,12 @@ import {
   X,
   Home,
   Calculator,
-  BarChart3,
   Info,
   MessageSquare,
-  GraduationCap,
   Sparkles,
   ChevronDown,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "./partials/Logo";
 
 const NavBar = () => {
   const [theme, setTheme] = useState(() => {
@@ -85,7 +82,7 @@ const NavBar = () => {
 
   // Update active nav when location changes
   useEffect(() => {
-    const hash = location.hash.replace("#", "") || "home";
+    const hash = location.hash.replace("#", "") || "/home";
     setActiveNav(hash);
 
     // Scroll to section if hash is present
@@ -116,8 +113,8 @@ const NavBar = () => {
       id: "home",
       label: "Home",
       icon: <Home className="w-4 h-4" />,
-      path: "/#home",
-      hash: "#home",
+      path: "/",
+      hash: "/",
     },
     {
       id: "calculator",
@@ -189,8 +186,9 @@ const NavBar = () => {
                 }}
                 className="flex items-center gap-2 sm:gap-3"
               >
-                <div className="relative">
-                  <Logo size={36} animated={false} showText={false} />
+                <div className="relative h-10 w-10 1/1">
+                  <img src="../logo_icon.png" alt="_logo" className="" />
+                  {/* <Logo size={36} animated={false} showText={false} /> */}
                   <div className="absolute -inset-2 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full blur opacity-20 -z-10"></div>
                 </div>
                 <div className="hidden sm:block">
@@ -361,11 +359,11 @@ const NavBar = () => {
                     <span>Start Calculating</span>
                   </Link>
                 </div>
-
+                    
                 {/* Mobile Footer */}
                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700/50">
                   <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                    <p>UAF CGPA Calculator v2.0</p>
+                    <p>UAF CGPA Calculator v4.0</p>
                     <p className="mt-1">
                       Official tool for University of Agriculture students
                     </p>

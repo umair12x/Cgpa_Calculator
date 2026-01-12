@@ -4,8 +4,8 @@ import { FaRegCopy, FaCheck } from "react-icons/fa6";
 
 const Input = ({ value, setregNo, disabled, onFocus, onBlur }) => {
   const [theme, setTheme] = useState("light");
-  const [isFocused, setIsFocused] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [isfocused, setIsfocused] = useState('false');
+  const [copied, setCopied] = useState('false');
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -54,12 +54,12 @@ const Input = ({ value, setregNo, disabled, onFocus, onBlur }) => {
   };
 
   const handleFocus = () => {
-    setIsFocused(true);
+    setIsfocused(true);
     onFocus?.();
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
+    setIsfocused(false);
     onBlur?.();
   };
 
@@ -112,7 +112,7 @@ const Input = ({ value, setregNo, disabled, onFocus, onBlur }) => {
   const isValidFormat = /^\d{4}-ag-\d{1,6}$/.test(value);
 
   return (
-    <StyledWrapper theme={theme} isFocused={isFocused} isValid={isValidFormat} hasValue={!!value}>
+    <StyledWrapper theme={theme} isfocused={isfocused} isValid={isValidFormat} hasValue={!!value}>
       <div className="input-container">
         <div className="input-wrapper">
           <input
@@ -181,12 +181,12 @@ const StyledWrapper = styled.div`
     border-radius: 16px;
     padding: 4px;
     backdrop-filter: blur(10px);
-    border: 1px solid ${({ theme, isFocused }) => 
-      isFocused 
+    border: 1px solid ${({ theme, isfocused }) => 
+      isfocused 
         ? (theme === 'dark' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(16, 185, 129, 0.4)')
         : (theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)')};
-    box-shadow: ${({ theme, isFocused }) => 
-      isFocused 
+    box-shadow: ${({ theme, isfocused }) => 
+      isfocused 
         ? (theme === 'dark' 
             ? '0 0 0 1px rgba(16, 185, 129, 0.3), 0 8px 32px rgba(16, 185, 129, 0.1)' 
             : '0 0 0 1px rgba(16, 185, 129, 0.2), 0 8px 32px rgba(16, 185, 129, 0.08)')
