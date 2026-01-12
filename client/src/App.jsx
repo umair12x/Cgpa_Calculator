@@ -6,7 +6,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import NavBar from "./components/navbar";
+import NavBar from "./components/Navbar";
 import MyFooter from "./components/MyFooter";
 import Responser from "./components/Responser";
 import UseAccordian from "./components/UseAccordian";
